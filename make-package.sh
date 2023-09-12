@@ -50,6 +50,4 @@ fi
 cp -a debian "$debian_dir"
 
 cd "$opencv_dir"
-# debuild is picky about extra files (opencv_contrib) in the source dir
-# so use fakeroot instead
-fakeroot debian/rules binary
+dpkg-buildpackage -b
