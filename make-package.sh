@@ -50,4 +50,4 @@ fi
 cp -a debian "$debian_dir"
 
 cd "$opencv_dir"
-dpkg-buildpackage -b
+dpkg-buildpackage -b 2>&1 | tee ../dpkg-buildpackage.log
