@@ -1,0 +1,5 @@
+opencv-full-aar (4.8.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- whs <whs@unknown>  Fri, 08 Sep 2023 16:51:58 +0300

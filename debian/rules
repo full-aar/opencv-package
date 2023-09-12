@@ -1,0 +1,57 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE=1
+
+# cuda compute capabilities as of 2023-09-12 (https://developer.nvidia.com/cuda-gpus):
+# 8.7 - Jetson AGX Orin, Jetson Orin NX, Jetson Orin Nan
+# 7.2 - Jetson AGX Xavier, Jetson Xavier NX
+# 6.2 - Jetson TX2
+# 5.3 - Jetson Nano
+CMAKE_FLAGS= \
+	-D CMAKE_BUILD_TYPE=Release \
+	-D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules \
+	-D EIGEN_INCLUDE_PATH=/usr/include/eigen3 \
+	-D WITH_CUDA=ON \
+	-D CUDA_ARCH_BIN=5.3,6.2,7.2,8.7 \
+	-D CUDA_ARCH_PTX= \
+	-D WITH_CUDNN=ON \
+	-D WITH_CUBLAS=ON \
+	-D ENABLE_FAST_MATH=ON \
+	-D CUDA_FAST_MATH=ON \
+	-D OPENCV_DNN_CUDA=ON \
+	-D ENABLE_NEON=ON \
+	-D WITH_GTK=ON \
+	-D WITH_TBB=ON \
+	-D BUILD_TBB=ON \
+	-D WITH_OPENMP=ON \
+	-D WITH_EIGEN=ON \
+	-D OPENCV_GENERATE_PKGCONFIG=ON \
+	-D WITH_OPENCL=OFF \
+	-D WITH_OPENGL=OFF \
+	-D WITH_QT=OFF \
+	-D BUILD_TIFF=OFF \
+	-D WITH_FFMPEG=OFF \
+	-D WITH_GSTREAMER=OFF \
+	-D BUILD_TESTS=OFF \
+	-D WITH_V4L=OFF \
+	-D WITH_LIBV4L=OFF \
+	-D OPENCV_ENABLE_NONFREE=OFF \
+	-D INSTALL_C_EXAMPLES=OFF \
+	-D INSTALL_PYTHON_EXAMPLES=OFF \
+	-D BUILD_opencv_python2=OFF \
+	-D BUILD_opencv_python3=OFF \
+	-D BUILD_EXAMPLES=OFF
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	dh_auto_clean -B $(BUILDDIR)
+
+override_dh_auto_configure:
+	dh_auto_configure \
+		-- $(CMAKE_FLAGS)
+
+override_dh_auto_build:
+	dh_auto_build -- -j4
