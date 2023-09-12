@@ -3,8 +3,13 @@
 # output every command that modifies files on the build system.
 export DH_VERBOSE=1
 
+TESTS=ON
+ifneq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	TESTS=OFF
+endif
+
 # cuda compute capabilities as of 2023-09-12 (https://developer.nvidia.com/cuda-gpus):
-# 8.7 - Jetson AGX Orin, Jetson Orin NX, Jetson Orin Nan
+# 8.7 - Jetson AGX Orin, Jetson Orin NX, Jetson Orin Nano
 # 7.2 - Jetson AGX Xavier, Jetson Xavier NX
 # 6.2 - Jetson TX2
 # 5.3 - Jetson Nano
@@ -33,7 +38,8 @@ CMAKE_FLAGS= \
 	-D BUILD_TIFF=OFF \
 	-D WITH_FFMPEG=OFF \
 	-D WITH_GSTREAMER=OFF \
-	-D BUILD_TESTS=OFF \
+	-D BUILD_TESTS="$TESTS" \
+	-D BUILD_PERF_TESTS="$TESTS" \
 	-D WITH_V4L=OFF \
 	-D WITH_LIBV4L=OFF \
 	-D OPENCV_ENABLE_NONFREE=OFF \
@@ -46,12 +52,14 @@ CMAKE_FLAGS= \
 %:
 	dh $@
 
-override_dh_auto_clean:
-	dh_auto_clean -B $(BUILDDIR)
-
 override_dh_auto_configure:
 	dh_auto_configure \
 		-- $(CMAKE_FLAGS)
 
 override_dh_auto_build:
 	dh_auto_build -- -j4
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	dh_auto_test
+endif
