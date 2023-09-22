@@ -63,3 +63,9 @@ override_dh_auto_test:
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	dh_auto_test
 endif
+
+# without this we get:
+# dpkg-shlibdeps: error: no dependency information found for /usr/local/cuda-11.4/lib64/libnppc.so.11 (used by debian/opencv-full-aar/usr/lib/aarch64-linux-gnu/libopencv_cudaimgproc.so.4.8.0)
+# dont really understand the root cause, but lets hope for the best!
+override_dh_shlibdeps:
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
