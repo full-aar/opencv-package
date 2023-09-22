@@ -13,9 +13,10 @@ Package: opencv-full-aar
 Section: libs
 Architecture: any
 Multi-Arch: same
-Depends: cuda-toolkit-11-4
-         cuda-libraries-11-4
+Depends: cuda-toolkit-11-4,
+         cuda-libraries-11-4,
          cuda-libraries-dev-11-4,
+         libnppc11,
          ${misc:Depends}
 Description: opencv for full-aar
 Provides: libopencv-core-dev,
